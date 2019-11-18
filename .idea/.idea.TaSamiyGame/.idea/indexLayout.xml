@@ -15,8 +15,8 @@
     <explicitExcludes>
       <Path>.git</Path>
       <Path>.idea</Path>
-      <Path>Game.v0.1_mac.app</Path>
-      <Path>Game_v0.1_win</Path>
+      <Path>Game.v0.2.app</Path>
+      <Path>Game_v02_win</Path>
       <Path>Library</Path>
       <Path>Logs</Path>
       <Path>Temp</Path>

@@ -1,0 +1,8 @@
+#dirs
+ProjectSettings/
+Temp/
+Game_v*/
+Library/
+Logs/
+Obj/
+Packages/
