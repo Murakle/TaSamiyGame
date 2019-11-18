@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -55,7 +56,7 @@ public class Player : MonoBehaviour
         curHP -= damage;
         if (curHP <= 0)
         {
-            Debug.Log("GameOVER");
+            SceneManager.LoadScene("GameOver");
         }
     }
 
