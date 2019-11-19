@@ -39,6 +39,7 @@ public class Bullet : MonoBehaviour
         {
             Debug.Log("popal_blyattt");
             player.GetComponent<Player>().Hit(damage);
+            Destroy(gameObject);
         }
     }
 }

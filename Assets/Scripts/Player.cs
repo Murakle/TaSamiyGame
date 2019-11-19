@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+#if UNITY_STANDALONE
         if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
         {
             speedY = speed;
@@ -43,7 +44,9 @@ public class Player : MonoBehaviour
         {
             speedX = speed;
         }
-
+#elif UNITY_IOS || UNITY_ANDROID
+//todo
+#endif
         transform.Translate(speedX, speedY, 0);
         curMana = Math.Min(curMana + manaRegen * Time.deltaTime, maxMana);
         curHP = Math.Min(curHP + HPRegen * Time.deltaTime, maxHP);

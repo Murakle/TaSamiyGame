@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 275.97, y: 245.41}
-  m_SizeDelta: {x: -551.95, y: -490.82}
+  m_AnchoredPosition: {x: 274.7, y: 225.67}
+  m_SizeDelta: {x: -549.5, y: -451.35}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &308207442
 MonoBehaviour:
@@ -178,11 +178,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 35
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 2
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -317,8 +317,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -252.4, y: 243.7}
-  m_SizeDelta: {x: -504.8, y: -490.82}
+  m_AnchoredPosition: {x: -321.6, y: 224.8}
+  m_SizeDelta: {x: -643, y: -453.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &374002590
 MonoBehaviour:
@@ -352,11 +352,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 35
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 40
+    m_MaxSize: 50
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -571,7 +571,7 @@ MonoBehaviour:
   maxHP: 100
   maxMana: 100
   manaRegen: 10
-  HPRegen: 2
+  HPRegen: 1
 --- !u!212 &1667869866
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -819,16 +819,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1010622827}
     m_Modifications:
-    - target: {fileID: 1199741847773542538, guid: 0bc54be8061d046339643f1e1a65880d,
-        type: 3}
-      propertyPath: count1
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 1199741847773542538, guid: 0bc54be8061d046339643f1e1a65880d,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 66796697492642738, guid: 0bc54be8061d046339643f1e1a65880d,
         type: 3}
       propertyPath: m_Name
@@ -938,6 +928,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1199741847773542538, guid: 0bc54be8061d046339643f1e1a65880d,
+        type: 3}
+      propertyPath: count1
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1199741847773542538, guid: 0bc54be8061d046339643f1e1a65880d,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0bc54be8061d046339643f1e1a65880d, type: 3}
