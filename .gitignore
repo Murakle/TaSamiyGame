@@ -4,6 +4,7 @@
 [Bb]uild/
 [Bb]uilds/
 [Bb]in/
+Logs/
 Assets/AssetStoreTools*
 
 # Visual Studio cache directory
@@ -14,7 +15,6 @@ ExportedObj/
 .consulo/
 *.csproj
 *.unityproj
-*.sln
 *.suo
 *.tmp
 *.user
