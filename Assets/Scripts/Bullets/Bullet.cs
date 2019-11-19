@@ -3,11 +3,11 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 
-public class Bullet : MonoBehaviour
+public abstract class Bullet : MonoBehaviour
 {
     [SerializeField] private float damage;
-    [SerializeField] private float speed;
-    private Transform player;
+    [SerializeField] protected float speed;
+    protected Transform player;
 
     private void Awake()
     {
@@ -17,21 +17,8 @@ public class Bullet : MonoBehaviour
         transform.Rotate(0, 0, angle * 180 / pi);
     }
 
-    private void FixedUpdate()
-    {
-        Vector2 dis = player.position - transform.position;
-        if (VectorLength(dis) > 20)
-        {
-            Destroy(gameObject);
-        }
+    public abstract void FixedUpdate();
 
-        transform.Translate(Time.deltaTime * speed * Vector2.right);
-    }
-
-    private double VectorLength(Vector2 a)
-    {
-        return Math.Sqrt(a.x * a.x + a.y * a.y);
-    }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -42,4 +29,10 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    
+    protected double VectorLength(Vector2 a)
+    {
+        return Math.Sqrt(a.x * a.x + a.y * a.y);
+    }
+
 }

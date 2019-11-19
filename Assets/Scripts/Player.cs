@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     private float speedY;
     private float curMana;
     private float curHP;
+    private float dirAngle;
 
 
     void Start()
@@ -25,29 +26,79 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
 #if UNITY_STANDALONE
-        if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow))
+
+        float newAngle = 0;
+
+        bool up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
+        bool left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
+        bool right = Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow);
+        bool down = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
+        bool move = (up ^ down) || (left ^ right);
+        if (up && down)
         {
-            speedY = speed;
+            up = false;
+            down = false;
         }
 
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        if (right && left)
         {
-            speedX = -speed;
+            right = false;
+            left = false;
         }
 
-        if (Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))
+        if (up)
         {
-            speedY = -speed;
+            if (left)
+            {
+                newAngle = -135;
+            }
+            else if (right)
+            {
+                newAngle = 135;
+            }
+            else
+            {
+                newAngle = 180;
+            }
         }
-
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        else if (down)
         {
-            speedX = speed;
+            if (left)
+            {
+                newAngle = -45;
+            }
+            else if (right)
+            {
+                newAngle = 45;
+            }
+            else
+            {
+                newAngle = 0;
+            }
+        }
+        else
+        {
+            if (left)
+            {
+                newAngle = -90;
+            }
+            else if (right)
+            {
+                newAngle = 90;
+            }
+            else
+            {
+                newAngle = dirAngle;
+            }
         }
 #elif UNITY_IOS || UNITY_ANDROID
 //todo
 #endif
-        transform.Translate(speedX, speedY, 0);
+
+        transform.Rotate(0, 0, -(dirAngle - newAngle));
+        dirAngle = newAngle;
+
+        transform.Translate(Vector2.down * (move ? speed : 0));
         curMana = Math.Min(curMana + manaRegen * Time.deltaTime, maxMana);
         curHP = Math.Min(curHP + HPRegen * Time.deltaTime, maxHP);
 

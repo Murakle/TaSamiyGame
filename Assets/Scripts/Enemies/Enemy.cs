@@ -7,7 +7,7 @@ namespace Enemies
     public abstract class Enemy : MonoBehaviour
     {
         [SerializeField] private float shootingFrequency; // 
-        [SerializeField] private GameObject Bullet;
+        [SerializeField] protected GameObject Bullet;
 
         private float lastShoot;
 
@@ -26,10 +26,6 @@ namespace Enemies
             }
         }
 
-        public void Shoot()
-        {
-            var BulletCopy = Instantiate(Bullet, transform.position, Quaternion.identity);
-            BulletCopy.transform.SetParent(GameObject.Find("Bullets").transform);
-        }
+        public abstract void Shoot();
     }
 }
