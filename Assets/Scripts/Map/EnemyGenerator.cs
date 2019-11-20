@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Map : MonoBehaviour
+public class EnemyGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject Enemy1;
     [SerializeField] private int count1;
@@ -8,6 +8,8 @@ public class Map : MonoBehaviour
     [SerializeField] private int count2;
     [SerializeField] private GameObject Enemy3;
     [SerializeField] private int count3;
+
+    private int x, y;
 
     void Start()
     {
@@ -22,16 +24,28 @@ public class Map : MonoBehaviour
         {
             float w = GetComponent<RectTransform>().rect.width;
             float h = GetComponent<RectTransform>().rect.height;
-            Vector2 p = new Vector3(w * Random.Range(0.0f, 1.0f) - w / 2,
-                h * Random.Range(0.0f, 1.0f) - h / 2, 0);
 
+            Vector3 p = new Vector3(w * Random.Range(0.0f, 1.0f) - w / 2,
+                h * Random.Range(0.0f, 1.0f) - h / 2, -1);
+            p += GetComponent<RectTransform>().position;
             var EnemyCopy = Instantiate(Enemy, p, Quaternion.identity);
-            EnemyCopy.transform.SetParent(GameObject.FindWithTag("Enemies").transform);
+            EnemyCopy.transform.SetParent(gameObject.transform);
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void setXY(int x, int y)
     {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
     }
 }

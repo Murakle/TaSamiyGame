@@ -9,25 +9,29 @@ public class Player : MonoBehaviour
     [SerializeField] public int maxMana;
     [SerializeField] public float manaRegen;
     [SerializeField] public float HPRegen;
-
+    [SerializeField] public float PointPerSecond;
     private float speedX;
     private float speedY;
     private float curMana;
     private float curHP;
-    private float dirAngle;
+    private int totalScore;
+    private int additionalScore;
+    private int timeScore;
+    private Vector3 dirAngle;
 
 
     void Start()
     {
+        totalScore = additionalScore = timeScore = 0;
         curMana = 0;
         curHP = maxHP;
+        dirAngle = new Vector3(0, 0, 0);
     }
 
     private void FixedUpdate()
     {
 #if UNITY_STANDALONE
-
-        float newAngle = 0;
+        Vector3 newAngle = new Vector3(0, 0, 0);
 
         bool up = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow);
         bool left = Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow);
@@ -50,41 +54,41 @@ public class Player : MonoBehaviour
         {
             if (left)
             {
-                newAngle = -135;
+                newAngle = new Vector3(0, 0, -135);
             }
             else if (right)
             {
-                newAngle = 135;
+                newAngle = new Vector3(0, 0, 135);
             }
             else
             {
-                newAngle = 180;
+                newAngle = new Vector3(0, 0, 180);
             }
         }
         else if (down)
         {
             if (left)
             {
-                newAngle = -45;
+                newAngle = new Vector3(0, 0, -45);
             }
             else if (right)
             {
-                newAngle = 45;
+                newAngle = new Vector3(0, 0, 45);
             }
             else
             {
-                newAngle = 0;
+                newAngle = new Vector3(0, 0, 0);
             }
         }
         else
         {
             if (left)
             {
-                newAngle = -90;
+                newAngle = new Vector3(0, 0, -90);
             }
             else if (right)
             {
-                newAngle = 90;
+                newAngle = new Vector3(0, 0, 90);
             }
             else
             {
@@ -95,15 +99,18 @@ public class Player : MonoBehaviour
 //todo
 #endif
 
-        transform.Rotate(0, 0, -(dirAngle - newAngle));
-        dirAngle = newAngle;
 
+        transform.rotation = Quaternion.Euler(newAngle);
+        dirAngle = newAngle;
         transform.Translate(Vector2.down * (move ? speed : 0));
+
+
         curMana = Math.Min(curMana + manaRegen * Time.deltaTime, maxMana);
         curHP = Math.Min(curHP + HPRegen * Time.deltaTime, maxHP);
-
+        timeScore = (int) (Time.time * PointPerSecond);
         speedX = speedY = 0;
     }
+
 
     public void Hit(float damage)
     {
@@ -114,9 +121,35 @@ public class Player : MonoBehaviour
         }
     }
 
+    private bool dif(float a, float b)
+    {
+        if (a <= 0 && b >= 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private bool equal(float a, float b)
+    {
+        if (Math.Abs(a - b) <= 10)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public int getcMana()
     {
         return (int) curMana;
+    }
+
+    public int getTotalScore()
+    {
+        totalScore = additionalScore + timeScore;
+        return totalScore;
     }
 
     public int getMaxMana()
