@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿
+using System.Drawing;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Camera : MonoBehaviour
+public class CameraDamping : MonoBehaviour
 {
     private GameObject player;
+
     private Vector3 offset;
     [SerializeField] private float damping;
+
 
     void Start()
     {
@@ -16,13 +18,15 @@ public class Camera : MonoBehaviour
     }
 
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         Vector3 target = new Vector3(player.transform.position.x - offset.x, player.transform.position.y + offset.y,
             transform.position.z);
 
         Vector3 currentPosition = Vector3.Lerp(transform.position, target, damping * Time.deltaTime);
 
+
         transform.position = currentPosition;
     }
+    
 }

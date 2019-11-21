@@ -13,16 +13,16 @@ namespace Enemies
 
         private void Awake()
         {
-            lastShoot = Time.time;
+            lastShoot = Time.timeSinceLevelLoad;
             shootingFrequency += Random.Range(-0.5f, 0.1f);
         }
 
         private void FixedUpdate()
         {
-            if (Time.time - lastShoot > shootingFrequency)
+            if (Time.timeSinceLevelLoad - lastShoot > shootingFrequency)
             {
                 Shoot();
-                lastShoot = Time.time;
+                lastShoot = Time.timeSinceLevelLoad;
             }
         }
 

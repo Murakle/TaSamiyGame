@@ -8,17 +8,19 @@ public class MapGenerator : MonoBehaviour
 {
     [SerializeField] private GameObject MapPart;
     [SerializeField] private int offset;
-
+    private Transform[,] map;
     private int cx, cy;
     private float w, h;
 
-    void Start()
+
+    void Awake()
     {
         w = MapPart.GetComponent<RectTransform>().rect.width;
         h = MapPart.GetComponent<RectTransform>().rect.height;
         cx = 0;
         cy = 0;
-        GenerateMissing();
+        map = new Transform[offset * 2 + 1, offset * 2 + 1];
+        Generate();
     }
 
     private void FixedUpdate()
@@ -26,43 +28,45 @@ public class MapGenerator : MonoBehaviour
         var PlayerPos = getPlayerPos();
         if (!PlayerPos.equal(cx, cy))
         {
-            cx = PlayerPos.First;
-            cy = PlayerPos.Second;
-
-            Clear();
-            GenerateMissing();
+            Clear(PlayerPos.First - cx, PlayerPos.Second - cy);
+//            cx = PlayerPos.First;
+//            cy = PlayerPos.Second;
+//
+//            GenerateMissing();
         }
     }
 
-    private void GenerateMapPart(int x, int y)
+    private GameObject GenerateMapPart(int x, int y)
     {
         Vector3 pos = new Vector3(x * w, y * h, 1);
         var MapPartClone = Instantiate(MapPart);
         MapPartClone.GetComponent<RectTransform>().position = pos;
         MapPartClone.transform.SetParent(gameObject.transform);
+        MapPartClone.transform.name = "MapPart(" + x + "," + y + ")";
         MapPartClone.GetComponent<EnemyGenerator>().setXY(x, y);
+        return MapPartClone;
     }
 
     private void Generate()
     {
-        for (int i = cx - offset; i <= cx + offset; i++)
+        for (int i = -offset; i <= offset; i++)
         {
-            for (int j = cy - offset; j <= cy + offset; j++)
+            for (int j = -offset; j <= offset; j++)
             {
-                GenerateMapPart(i, j);
+                map[i + offset, j + offset] = GenerateMapPart(cx + i, cy + j).transform;
             }
         }
     }
 
     private void GenerateMissing()
     {
-        for (int i = cx - offset; i <= cx + offset; i++)
+        for (int i = -offset; i <= offset; i++)
         {
-            for (int j = cy - offset; j <= cy + offset; j++)
+            for (int j = -offset; j <= offset; j++)
             {
-                if (!FindInChildrens(i, j))
+                if (map[i + offset, j + offset] == null)
                 {
-                    GenerateMapPart(i, j);
+                    GenerateMapPart(cx + i, cy + j);
                 }
             }
         }
@@ -81,15 +85,43 @@ public class MapGenerator : MonoBehaviour
         return false;
     }
 
-    private void Clear()
+    private void Clear(int dx, int dy)
     {
-        foreach (Transform child in gameObject.transform)
+        cx += dx;
+        cy += dy;
+        Transform[,] mapClone = new Transform[offset * 2 + 1, offset * 2 + 1];
+        for (int i = -offset; i <= offset; i++)
         {
-            if (!good(child.GetComponent<EnemyGenerator>().getX(), child.GetComponent<EnemyGenerator>().getY()))
+            for (int j = -offset; j <= offset; j++)
             {
-                Debug.Log("Cleared " + child.GetComponent<EnemyGenerator>().getX() + " " +
-                          child.GetComponent<EnemyGenerator>().getY());
-                GameObject.Destroy(child.gameObject);
+                int ddx = (dx - i) * dx;
+                int ddy = (dy - j) * dy;
+
+                if (ddx == 2 || ddy == 2)
+                {
+                    Destroy(map[i + offset, j + offset].gameObject);
+                    Debug.Log("Destroyed " + (i) + " " + (j));
+                    map[i + offset, j + offset] = null;
+                }
+
+                mapClone[i + offset, j + offset] = map[i + offset, j + offset];
+            }
+        }
+
+        for (int i = -offset; i <= offset; i++)
+        {
+            for (int j = -offset; j <= offset; j++)
+            {
+                if (0 <= i + offset + dx && i + offset + dx < offset * 2 + 1
+                                         && 0 <= j + offset + dy && j + offset + dy < offset * 2 + 1)
+                {
+                    map[i + offset, j + offset] = mapClone[i + offset + dx, j + offset + dy];
+                    Debug.Log("Moved " + i + " " + j);
+                }
+                else
+                {
+                    map[i + offset, j + offset] = GenerateMapPart(cx + i, cy + j).transform;
+                }
             }
         }
     }

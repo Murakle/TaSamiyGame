@@ -20,6 +20,12 @@ public class Menu : MonoBehaviour
         SceneManager.LoadScene("Game");
     }
 
+    public void RestartGame()
+    {
+        
+        Application.LoadLevel(Application.loadedLevel);
+    }
+
     public void ExitGame()
     {
         Application.Quit();

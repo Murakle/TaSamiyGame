@@ -14,14 +14,15 @@ public class EnemyGenerator : MonoBehaviour
     void Start()
     {
         Generate(Enemy1, count1);
-//        Generate(Enemy2, count2);
+        Generate(Enemy2, count2);
 //        Generate(Enemy3, count3);
     }
 
     private void Generate(GameObject Enemy, int count)
     {
-        for (int i = 0; i < count1; i++)
+        for (int i = 0; i < count; i++)
         {
+            Debug.Log("Generated Boom");
             float w = GetComponent<RectTransform>().rect.width;
             float h = GetComponent<RectTransform>().rect.height;
 

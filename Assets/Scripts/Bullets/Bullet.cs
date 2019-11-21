@@ -6,16 +6,11 @@ using Random = UnityEngine.Random;
 public abstract class Bullet : MonoBehaviour
 {
     [SerializeField] private float damage;
-    [SerializeField] protected float speed;
+    
     protected Transform player;
 
-    private void Awake()
-    {
-        player = GameObject.FindWithTag("Player").transform;
-        float pi = (float) Math.PI;
-        float angle = Random.Range(-pi, pi);
-        transform.Rotate(0, 0, angle * 180 / pi);
-    }
+    public abstract void Awake();
+    
 
     public abstract void FixedUpdate();
 
@@ -24,15 +19,20 @@ public abstract class Bullet : MonoBehaviour
     {
         if (other.gameObject.transform.CompareTag("Player"))
         {
-//            Debug.Log("popal_blyattt");
-            player.GetComponent<Player>().Hit(damage);
-            Destroy(gameObject);
+            if (!player.GetComponent<Player>().Hit(damage) && !player.GetComponent<Player>().GO())
+            {
+                player.GetComponent<Player>().GameOver();
+                Destroy(gameObject, 0.04f);
+            }
+            else
+            {
+                Destroy(gameObject, 0.04f);
+            }
         }
     }
-    
+
     protected double VectorLength(Vector2 a)
     {
         return Math.Sqrt(a.x * a.x + a.y * a.y);
     }
-
 }
