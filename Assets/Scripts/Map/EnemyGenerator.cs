@@ -22,7 +22,7 @@ public class EnemyGenerator : MonoBehaviour
     {
         for (int i = 0; i < count; i++)
         {
-            Debug.Log("Generated Boom");
+//            Debug.Log("Generated Boom");
             float w = GetComponent<RectTransform>().rect.width;
             float h = GetComponent<RectTransform>().rect.height;
 

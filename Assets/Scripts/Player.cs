@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine;
+using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class Player : MonoBehaviour
 {
@@ -14,6 +18,9 @@ public class Player : MonoBehaviour
     [SerializeField] public Camera mainCamera;
     [SerializeField] private Transform scoreUI;
 
+
+    private int controlType = 2;
+
     private float GameOverStartTime;
     private bool gameOver;
 
@@ -25,27 +32,39 @@ public class Player : MonoBehaviour
     private int totalScore;
     private int additionalScore;
     private int timeScore;
-
+    private float BeginTime;
     private Vector3 dirAngle;
+
+    private Vector2 beginPos;
+    private Vector2 direction;
+    private bool dirChoosen;
+    private Vector3 curDir;
 
     void Start()
     {
         gameOver = false;
-        Time.timeScale = 1.0f;
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
+        BeginTime = Time.realtimeSinceStartup;
         totalScore = additionalScore = timeScore = 0;
         curMana = 0;
         curHP = maxHP;
+        curDir = new Vector3(0, 0, 1);
         dirAngle = new Vector3(0, 0, 0);
+    }
+
+    public void Reload()
+    {
+        gameOver = false;
+        GameObject.Find("Map");
     }
 
     private void FixedUpdate()
     {
         if (gameOver)
         {
-            GameOverFixedUpdate();
+//            GameOverFixedUpdate();
             return;
         }
+
 #if UNITY_STANDALONE
         Vector3 newAngle = new Vector3(0, 0, 0);
 
@@ -111,14 +130,79 @@ public class Player : MonoBehaviour
                 newAngle = dirAngle;
             }
         }
-#elif UNITY_IOS || UNITY_ANDROID
-//todo
-#endif
-
-
         transform.rotation = Quaternion.Euler(newAngle);
         dirAngle = newAngle;
         transform.Translate(Vector2.down * (move ? speed : 0));
+#elif UNITY_IOS || UNITY_ANDROID
+        if (controlType == 0 && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    beginPos = touch.position;
+                    dirChoosen = false;
+                    break;
+                case TouchPhase.Moved:
+                    direction = touch.position - beginPos;
+                    break;
+                case TouchPhase.Ended:
+                    dirChoosen = true;
+                    break;
+            }
+        }
+
+        if (controlType == 1 && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Moved)
+            {
+                direction = touch.deltaPosition;
+            }
+
+            dirChoosen = true;
+        }
+
+        if (controlType == 2 && Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            if (touch.phase == TouchPhase.Began)
+            {
+                beginPos = touch.position;
+            }
+
+            if (touch.phase == TouchPhase.Moved)
+            {
+                direction = touch.position - beginPos;
+                direction /= 10;
+            }
+
+            dirChoosen = true;
+        }
+
+        if (dirChoosen)
+        {
+            float angle = Vector2.SignedAngle(Vector2.down, direction);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            int w = Screen.width, h = Screen.height;
+            var newPos = transform.position;
+            if (controlType <= 1)
+            {
+                newPos.x += direction.x / w * speed * 10 * 5;
+                newPos.y += direction.y / h * speed * 10 * 5;
+            }
+            else
+            {
+                newPos.x += direction.normalized.x / 15;
+                newPos.y += direction.normalized.y / 15;
+            }
+
+            transform.position = newPos;
+            dirChoosen = false;
+        }
+
+
+#endif
 
 
         curMana = Math.Min(curMana + manaRegen * Time.deltaTime, maxMana);
@@ -127,16 +211,6 @@ public class Player : MonoBehaviour
         speedX = speedY = 0;
     }
 
-    private void GameOverFixedUpdate()
-    {
-        Time.timeScale = Math.Max((GameOverStartTime - Time.timeSinceLevelLoad + 1.4f) / 2.0f, 0.15f);
-        Time.fixedDeltaTime = 0.02f * Time.timeScale;
-        mainCamera.orthographicSize =
-            2.0f + Math.Max((GameOverStartTime - Time.timeSinceLevelLoad + 5.0f) / 5.0f, 0) * 3f;
-
-        scoreUI.GetComponent<TextMeshProUGUI>().fontSize =
-            50 + 50 * Math.Min((Time.timeSinceLevelLoad - GameOverStartTime) / 2, 1.0f);
-    }
 
     public bool Hit(float damage)
     {
@@ -198,10 +272,7 @@ public class Player : MonoBehaviour
     public void GameOver()
     {
         gameOver = true;
-        GameOverStartTime = Time.timeSinceLevelLoad;
-        Time.timeScale = 0.7f;
-        GameObject.FindWithTag("UI").transform.GetChild(0).gameObject.SetActive(false);
-        GameObject.FindWithTag("UI").transform.GetChild(1).gameObject.SetActive(false);
+        GameObject.FindWithTag("UI").transform.GetChild(2).gameObject.SetActive(false);
         GameObject.FindWithTag("UI").transform.GetChild(3).gameObject.SetActive(true);
     }
 }
